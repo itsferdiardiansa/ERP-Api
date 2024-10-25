@@ -1,0 +1,9 @@
+
+{
+  "name": "erp-project",
+  "private": true,
+  "workspaces": ["apps/*", "libs/*"],
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}

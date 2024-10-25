@@ -1,0 +1,14 @@
+
+{
+  "name": "api-gateway",
+  "version": "1.0.0",
+  "description": "API Gateway for ERP Project",
+  "main": "index.js",
+  "dependencies": {
+    "@nestjs/core": "^8.0.0",
+    "@nestjs/common": "^8.0.0"
+  },
+  "scripts": {
+    "start": "nest start"
+  }
+}

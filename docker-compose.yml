@@ -1,0 +1,9 @@
+
+version: '3'
+services:
+  api-gateway:
+    build: ./apps/api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
