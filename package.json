@@ -25,10 +25,15 @@
     "validate": "pnpm lint && pnpm type-check && pnpm format:check && pnpm test"
   },
   "lint-staged": {
-    "**/*.{js,ts,tsx}": [
-      "pnpm run lint",
-      "pnpm run format",
-      "pnpm run test"
+    "apps/*/src/**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write",
+      "jest --bail --findRelatedTests"
+    ],
+    "libs/*/src/**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write",
+      "jest --bail --findRelatedTests"
     ]
   },
   "devDependencies": {

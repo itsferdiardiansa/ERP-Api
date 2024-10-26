@@ -1,4 +1,3 @@
-// eslint.config.js
 import js from '@eslint/js'
 import typescriptParser from '@typescript-eslint/parser'
 import typescriptPlugin from '@typescript-eslint/eslint-plugin'
@@ -8,22 +7,21 @@ import securityPlugin from 'eslint-plugin-security'
 export default [
   js.configs.recommended,
   {
-    files: ['**/*.ts'], // Apply TypeScript parser only to .ts files
-    ignores: ['node_modules/**', 'dist/**'],
+    files: ['apps/*/src/**/*.ts', 'libs/*/src/**/*.ts'],
+    ignores: ['**/*.test.ts', '**/*.spec.ts', 'node_modules/**', 'dist/**'],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
         project: './tsconfig.json',
-        tsconfigRootDir: process.cwd(),
+        tsconfigRootDir: process.cwd()
       },
       globals: {
         window: 'readonly',
         document: 'readonly',
         process: 'readonly',
         module: 'readonly',
-        // Jest-specific globals for test files
         describe: 'readonly',
         it: 'readonly',
         test: 'readonly',
@@ -31,13 +29,13 @@ export default [
         beforeEach: 'readonly',
         afterEach: 'readonly',
         beforeAll: 'readonly',
-        afterAll: 'readonly',
-      },
+        afterAll: 'readonly'
+      }
     },
     plugins: {
       '@typescript-eslint': typescriptPlugin,
       jest: jestPlugin,
-      security: securityPlugin,
+      security: securityPlugin
     },
     rules: {
       // TypeScript Best Practices
@@ -46,10 +44,7 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-inferrable-types': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'error',
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        { argsIgnorePattern: '^_' },
-      ],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-empty-function': 'warn',
       '@typescript-eslint/no-shadow': ['error'],
       '@typescript-eslint/no-misused-promises': 'error',
@@ -60,7 +55,7 @@ export default [
       '@typescript-eslint/adjacent-overload-signatures': 'error',
       '@typescript-eslint/naming-convention': [
         'error',
-        { selector: 'interface', format: ['PascalCase'], prefix: ['I'] },
+        { selector: 'interface', format: ['PascalCase'], prefix: ['I'] }
       ],
       '@typescript-eslint/no-parameter-properties': 'off', // Allow NestJS constructor injection
       'no-console': ['warn', { allow: ['warn', 'error'] }],
@@ -71,7 +66,7 @@ export default [
       'security/detect-unsafe-regex': 'warn',
 
       // Code Consistency and Quality
-      eqeqeq: ['error', 'always'],
+      'eqeqeq': ['error', 'always'],
       'no-var': 'error',
       'prefer-const': 'error',
       'no-else-return': 'error',
@@ -80,7 +75,7 @@ export default [
       // 'no-magic-numbers': ['warn', { ignoreArrayIndexes: true, enforceConst: true, detectObjects: false }],
       'padding-line-between-statements': [
         'error',
-        { blankLine: 'always', prev: '*', next: 'return' },
+        { blankLine: 'always', prev: '*', next: 'return' }
       ],
 
       // Jest Rules for Testing
@@ -89,16 +84,7 @@ export default [
       'jest/no-identical-title': 'error',
       'jest/consistent-test-it': ['error', { fn: 'it' }],
       'jest/no-conditional-expect': 'warn',
-      'jest/no-done-callback': 'error',
-    },
-  },
-  {
-    files: ['*.config.js'],
-    languageOptions: {
-      globals: {
-        module: 'readonly',
-        process: 'readonly',
-      },
-    },
-  },
+      'jest/no-done-callback': 'error'
+    }
+  }
 ]
