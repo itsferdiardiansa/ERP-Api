@@ -1,0 +1,23 @@
+# MIT License
+
+Copyright (c) [2024] Ferdi Ardiansa
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+1. **Permission to Use, Copy, Modify, and Distribute**  
+   Users are granted the freedom to use, copy, and modify this software without any charge. You may incorporate or distribute this software in your own project as well as sell it, provided that the original copyright is maintained.  
+
+2. **Sublicensing Rights**  
+   You are allowed to sublicense this software, which means that you may grant rights to others to use and modify the software under terms consistent with this license. All sublicensing arrangements must align with the terms of this MIT License.
+
+3. **Inclusion of License Notice**  
+   A key condition of this license is that the above copyright notice and this permission notice shall be included in all copies or substantial portions of the software, in the documentation, or other materials provided with the distribution. This inclusion ensures that everyone who uses or modifies the software is aware of its licensing conditions.
+
+4. **Liability and Warranty Disclaimer**  
+   THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+5. **Use Cases and Applications**  
+   This license is often used for open-source projects where the authors wish to allow others to freely use, modify, and distribute the software. As a user or developer, you are encouraged to innovate with this software while respecting the outlined conditions. The MIT License aims to support innovation, development, and collaboration without imposing heavy restrictions.
+
+**In Summary**  
+The MIT License promotes free software usage, modification, and sharing while disclaiming liability. It enables developers and organizations to leverage this software to build upon and integrate it into commercial or personal projects. The freedom to sublicense also ensures that your modifications can be shared and expanded upon, making the MIT License one of the most flexible and widely used licenses in open-source software development.
