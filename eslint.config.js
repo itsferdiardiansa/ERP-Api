@@ -1,43 +1,86 @@
-import js from '@eslint/js';
-import typescriptParser from '@typescript-eslint/parser';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import typescriptParser from '@typescript-eslint/parser'
+import typescriptPlugin from '@typescript-eslint/eslint-plugin'
+import jsdocPlugin from 'eslint-plugin-jsdoc'
+import securityPlugin from 'eslint-plugin-security'
+import prettierPlugin from 'eslint-plugin-prettier'
 
 export default [
-  js.configs.recommended,
+  {
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    rules: {
+      'no-var': 'error',
+      'prefer-const': 'error',
+      eqeqeq: ['error', 'always'],
+      curly: 'error',
+    },
+  },
   {
     files: ['**/*.ts'],
-    ignores: ['node_modules/**', 'dist/**'],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
         project: './tsconfig.json',
         tsconfigRootDir: process.cwd(),
-      },
-      globals: {
-        window: 'readonly',
-        document: 'readonly',
-        process: 'readonly',
-        module: 'readonly',
       },
     },
     plugins: {
       '@typescript-eslint': typescriptPlugin,
     },
     rules: {
-      'no-console': 'warn',
-      'no-unused-vars': 'warn',
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
+      // '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: false }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+      // '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/explicit-module-boundary-types': 'warn',
     },
   },
   {
-    files: ['*.config.js'],
-    languageOptions: {
-      globals: {
-        module: 'readonly',
-        process: 'readonly',
-      },
+    files: ['**/*.ts', '**/*.js'],
+    plugins: {
+      jsdoc: jsdocPlugin,
+    },
+    rules: {
+      'jsdoc/require-jsdoc': [
+        'warn',
+        {
+          require: {
+            FunctionDeclaration: true,
+            MethodDefinition: true,
+            ClassDeclaration: true,
+            ArrowFunctionExpression: true,
+          },
+        },
+      ],
+      'jsdoc/check-alignment': 'warn',
+      'jsdoc/check-indentation': 'warn',
+      'jsdoc/no-undefined-types': 'warn',
+      'jsdoc/require-returns-type': 'error',
+      'jsdoc/require-param-type': 'error',
     },
   },
-];
+  {
+    files: ['**/*.ts', '**/*.js'],
+    plugins: {
+      security: securityPlugin,
+    },
+    rules: {
+      'security/detect-object-injection': 'off',
+      'security/detect-non-literal-fs-filename': 'warn',
+      'security/detect-eval-with-expression': 'error',
+    },
+  },
+  {
+    files: ['**/*.ts', '**/*.js'],
+    plugins: {
+      prettier: prettierPlugin,
+    },
+  },
+]
