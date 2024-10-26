@@ -13,9 +13,6 @@
     "prepare": "husky install",
     "install:all": "pnpm install --recursive",
     "lint": "bash scripts/ci/lint.sh",
-    "type-check": "bash scripts/ci/type-check.sh",
-    "test:unit": "bash scripts/ci/test-unit.sh",
-    "test:integration": "bash scripts/ci/test-integration.sh",
     "build": "bash scripts/ci/build.sh",
     "build:service": "SERVICE_NAME=<service-name> bash scripts/ci/build.sh",
     "docker:push": "bash scripts/release/docker-push.sh",
@@ -26,18 +23,25 @@
     "cleanup": "bash scripts/cleanup/clean-artifacts.sh",
     "format": "prettier --write 'apps/**/*.{js,ts}' 'libs/**/*.{js,ts}'",
     "format:check": "prettier --check 'apps/**/*.{js,ts}' 'libs/**/*.{js,ts}'",
+    "test": "jest --bail --findRelatedTests",
+    "test:coverage": "jest --coverage --passWithNoTests",
+    "test:watch": "jest --watch",
+    "test:unit": "bash scripts/ci/test-unit.sh",
+    "test:integration": "bash scripts/ci/test-integration.sh",
+    "type-check": "bash scripts/ci/type-check.sh",
+    "clean": "rm -rf apps/**/dist libs/**/dist",
     "validate": "pnpm lint && pnpm type-check && pnpm format:check && pnpm test"
   },
   "lint-staged": {
     "apps/*/src/**/*.{js,ts}": [
-      "eslint --fix",
-      "prettier --write",
-      "jest --bail --findRelatedTests"
+      "pnpm run lint",
+      "pnpm run format",
+      "pnpm run test"
     ],
     "libs/*/src/**/*.{js,ts}": [
-      "eslint --fix",
-      "prettier --write",
-      "jest --bail --findRelatedTests"
+      "pnpm run lint",
+      "pnpm run format",
+      "pnpm run test"
     ]
   },
   "devDependencies": {
