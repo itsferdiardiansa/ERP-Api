@@ -1,0 +1,19 @@
+name: Install Dependencies
+
+on: [push, pull_request]
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: ./.github/actions/setup/setup-node.yml
+
+      - name: Setup pnpm
+        uses: ./.github/actions/setup/setup-pnpm.yml
+
+      - name: Install Dependencies
+        run: bash scripts/ci/install.sh

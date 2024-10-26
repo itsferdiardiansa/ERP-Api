@@ -12,6 +12,7 @@ module.exports = {
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: './coverage',
+  coverageReporters: ["json", "lcov", "text"],
   transformIgnorePatterns: ['node_modules/(?!(YOUR-ESM-MODULE-HERE)/)'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'

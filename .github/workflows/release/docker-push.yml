@@ -1,0 +1,19 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+  docker-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Docker
+        uses: ./.github/actions/setup/setup-docker.yml
+
+      - name: Build and Push Docker Images
+        run: bash scripts/release/docker-push.sh

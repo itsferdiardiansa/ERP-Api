@@ -1,0 +1,15 @@
+name: Clean Artifacts
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Runs weekly on Sundays
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Clean Artifacts
+        run: bash scripts/cleanup/clean-artifacts.sh

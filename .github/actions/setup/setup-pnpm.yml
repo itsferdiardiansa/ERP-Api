@@ -1,0 +1,12 @@
+name: Setup pnpm
+
+on: [workflow_call]
+
+jobs:
+  setup-pnpm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
