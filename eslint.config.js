@@ -1,86 +1,104 @@
+// eslint.config.js
+import js from '@eslint/js'
 import typescriptParser from '@typescript-eslint/parser'
 import typescriptPlugin from '@typescript-eslint/eslint-plugin'
-import jsdocPlugin from 'eslint-plugin-jsdoc'
+import jestPlugin from 'eslint-plugin-jest'
 import securityPlugin from 'eslint-plugin-security'
-import prettierPlugin from 'eslint-plugin-prettier'
 
 export default [
+  js.configs.recommended,
   {
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
-    rules: {
-      'no-var': 'error',
-      'prefer-const': 'error',
-      eqeqeq: ['error', 'always'],
-      curly: 'error',
-    },
-  },
-  {
-    files: ['**/*.ts'],
+    files: ['**/*.ts'], // Apply TypeScript parser only to .ts files
+    ignores: ['node_modules/**', 'dist/**'],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
         project: './tsconfig.json',
         tsconfigRootDir: process.cwd(),
+      },
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        process: 'readonly',
+        module: 'readonly',
+        // Jest-specific globals for test files
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
       },
     },
     plugins: {
       '@typescript-eslint': typescriptPlugin,
-    },
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'error',
-      // '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: false }],
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_' },
-      ],
-      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
-      // '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/no-misused-promises': 'error',
-      '@typescript-eslint/explicit-module-boundary-types': 'warn',
-    },
-  },
-  {
-    files: ['**/*.ts', '**/*.js'],
-    plugins: {
-      jsdoc: jsdocPlugin,
-    },
-    rules: {
-      'jsdoc/require-jsdoc': [
-        'warn',
-        {
-          require: {
-            FunctionDeclaration: true,
-            MethodDefinition: true,
-            ClassDeclaration: true,
-            ArrowFunctionExpression: true,
-          },
-        },
-      ],
-      'jsdoc/check-alignment': 'warn',
-      'jsdoc/check-indentation': 'warn',
-      'jsdoc/no-undefined-types': 'warn',
-      'jsdoc/require-returns-type': 'error',
-      'jsdoc/require-param-type': 'error',
-    },
-  },
-  {
-    files: ['**/*.ts', '**/*.js'],
-    plugins: {
+      jest: jestPlugin,
       security: securityPlugin,
     },
     rules: {
-      'security/detect-object-injection': 'off',
+      // TypeScript Best Practices
+      // '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
+      '@typescript-eslint/explicit-module-boundary-types': 'error',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-inferrable-types': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-empty-function': 'warn',
+      '@typescript-eslint/no-shadow': ['error'],
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/consistent-type-assertions': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
+
+      // NestJS Best Practices
+      '@typescript-eslint/adjacent-overload-signatures': 'error',
+      '@typescript-eslint/naming-convention': [
+        'error',
+        { selector: 'interface', format: ['PascalCase'], prefix: ['I'] },
+      ],
+      '@typescript-eslint/no-parameter-properties': 'off', // Allow NestJS constructor injection
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+
+      // Security Best Practices
       'security/detect-non-literal-fs-filename': 'warn',
-      'security/detect-eval-with-expression': 'error',
+      'security/detect-object-injection': 'off',
+      'security/detect-unsafe-regex': 'warn',
+
+      // Code Consistency and Quality
+      eqeqeq: ['error', 'always'],
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'no-else-return': 'error',
+      'arrow-body-style': ['error', 'as-needed'],
+      'no-multiple-empty-lines': ['error', { max: 1 }],
+      // 'no-magic-numbers': ['warn', { ignoreArrayIndexes: true, enforceConst: true, detectObjects: false }],
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: '*', next: 'return' },
+      ],
+
+      // Jest Rules for Testing
+      'jest/no-disabled-tests': 'warn',
+      'jest/no-focused-tests': 'error',
+      'jest/no-identical-title': 'error',
+      'jest/consistent-test-it': ['error', { fn: 'it' }],
+      'jest/no-conditional-expect': 'warn',
+      'jest/no-done-callback': 'error',
     },
   },
   {
-    files: ['**/*.ts', '**/*.js'],
-    plugins: {
-      prettier: prettierPlugin,
+    files: ['*.config.js'],
+    languageOptions: {
+      globals: {
+        module: 'readonly',
+        process: 'readonly',
+      },
     },
   },
 ]
