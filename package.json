@@ -17,7 +17,7 @@
     "format": "prettier --write 'apps/**/*.{js,ts}' 'libs/**/*.{js,ts}'",
     "format:check": "prettier --check 'apps/**/*.{js,ts}' 'libs/**/*.{js,ts}'",
     "type-check": "tsc --noEmit",
-    "test": "jest --passWithNoTests",
+    "test": "jest --bail --findRelatedTests",
     "test:coverage": "jest --coverage --passWithNoTests",
     "test:watch": "jest --watch",
     "clean": "rm -rf apps/**/dist libs/**/dist",
