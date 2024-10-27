@@ -3,6 +3,15 @@ const baseConfig = require('./jest.config.base.cjs')
 module.exports = {
   ...baseConfig,
   projects: [
-    '<rootDir>/apps/auth-service'
+    {
+      ...baseConfig,
+      displayName: 'apps',
+      testMatch: ['<rootDir>/apps/*/src/**/*.spec.ts'],
+    },
+    {
+      ...baseConfig,
+      displayName: 'libs',
+      testMatch: ['<rootDir>/libs/*/src/**/*.spec.ts'],
+    }
   ]
 }

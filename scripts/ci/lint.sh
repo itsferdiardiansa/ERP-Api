@@ -2,5 +2,5 @@
 set -e
 
 echo "Running lint checks..."
-pnpm lint
-echo "Lint checks completed."
+eslint --config eslint.config.js "apps/*/src/**/*.{js,ts}" "libs/*/src/**/*.{js,ts}" --ignore-pattern '**/*.test.*' --ignore-pattern '**/*.spec.*' || { echo "Linting failed. Exiting."; exit 1; }
+echo "Lint checks completed successfully."

@@ -1,0 +1,7 @@
+{
+  "workflow_dispatch": {
+    "inputs": {
+      "service": "auth-service"
+    }
+  }
+}
