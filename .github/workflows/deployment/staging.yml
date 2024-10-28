@@ -1,0 +1,22 @@
+# name: Deploy to Staging
+
+# on:
+#   push:
+#     branches:
+#       - develop
+
+# jobs:
+#   deploy-staging:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+
+#       - name: Setup Node
+#         uses: ./.github/actions/setup/setup-node.yml
+
+#       - name: Setup pnpm
+#         uses: ./.github/actions/setup/setup-pnpm.yml
+
+#       - name: Deploy to Staging
+#         run: bash scripts/deployment/deploy-staging.sh

@@ -1,0 +1,15 @@
+name: Metrics Monitor
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # Runs every 6 hours
+
+jobs:
+  metrics-monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Monitor Metrics
+        run: bash scripts/observability/metrics-monitor.sh

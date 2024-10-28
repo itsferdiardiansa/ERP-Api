@@ -1,0 +1,20 @@
+# name: Deploy to Production
+
+# on:
+#   workflow_dispatch:
+
+# jobs:
+#   deploy-production:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+
+#       - name: Setup Node
+#         uses: ./.github/actions/setup/setup-node.yml
+
+#       - name: Setup pnpm
+#         uses: ./.github/actions/setup/setup-pnpm.yml
+
+#       - name: Deploy to Production
+#         run: bash scripts/deployment/deploy-production.sh

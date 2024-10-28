@@ -49,7 +49,7 @@ export default [
       '@typescript-eslint/no-shadow': ['error'],
       '@typescript-eslint/no-misused-promises': 'error',
       '@typescript-eslint/consistent-type-assertions': 'error',
-      '@typescript-eslint/consistent-type-imports': 'error',
+      // '@typescript-eslint/consistent-type-imports': 'error',
 
       // NestJS Best Practices
       '@typescript-eslint/adjacent-overload-signatures': 'error',

@@ -1,0 +1,16 @@
+# name: Versioning
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   versioning:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+
+#       - name: Run Versioning
+#         run: bash scripts/release/versioning.sh
