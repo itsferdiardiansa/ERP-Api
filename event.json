@@ -1,7 +1,24 @@
 {
-  "workflow_dispatch": {
-    "inputs": {
-      "service": "auth-service"
+  "ref": "refs/heads/feature-branch",
+  "repository": {
+    "name": "erp-project",
+    "owner": {
+      "login": "username"
     }
-  }
+  },
+  "pusher": {
+    "name": "username"
+  },
+  "pull_request": {
+    "head": {
+      "ref": "feature-branch"
+    },
+    "base": {
+      "ref": "main"
+    }
+  },
+  "workflow": "CI Pipeline",
+  "event_name": "push",
+  "branch": "feature-branch"
+  
 }

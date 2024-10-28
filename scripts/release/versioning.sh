@@ -1,59 +1,106 @@
 #!/bin/bash
 set -e
 
-# Configurable variables
-RELEASE_TYPE=${RELEASE_TYPE:-"patch"}    # Options: "major", "minor", "patch"
+SERVICE_NAME=$1
+if [[ -z "$SERVICE_NAME" ]]; then
+  echo "Error: Service name required (e.g., auth-service)"
+  exit 1
+fi
+
+RELEASE_TYPE=${RELEASE_TYPE:-"patch"}
 DEFAULT_BRANCH="main"
 REMOTE=${REMOTE:-"origin"}
+REPO_URL="https://github.com/itsferdiardiansa/ERP-Api"
+PR_URL="https://github.com/itsferdiardiansa/ERP-Api/pull"
+COMPARE_URL="$REPO_URL/compare"
 
-# Fetch latest tags and set default values
+# Fetch the latest tags and determine the latest tag for the service
 git fetch --tags "$REMOTE"
-LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+LATEST_TAG=$(git tag --list "${SERVICE_NAME}-v*" --sort=-v:refname | head -n 1)
 
-# Ensure on default branch for release
+# Determine the version to use based on the latest tag or initialize
+if [[ -z "$LATEST_TAG" ]]; then
+  MAJOR=0; MINOR=0; PATCH=1
+  NEW_TAG="${SERVICE_NAME}-v$MAJOR.$MINOR.$PATCH"
+  INITIAL_COMMIT_RANGE="HEAD"
+else
+  VERSION_NUM="${LATEST_TAG//[!0-9.]/}"
+  IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION_NUM"
+  
+  case "$RELEASE_TYPE" in
+    major) ((MAJOR+=1)); MINOR=0; PATCH=0 ;;
+    minor) ((MINOR+=1)); PATCH=0 ;;
+    patch) ((PATCH+=1)) ;;
+  esac
+  
+  NEW_TAG="${SERVICE_NAME}-v$MAJOR.$MINOR.$PATCH"
+  INITIAL_COMMIT_RANGE="${LATEST_TAG}..HEAD"
+fi
+
+# Check if we are on the default branch and pull the latest changes
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [ "$CURRENT_BRANCH" != "$DEFAULT_BRANCH" ]; then
-  echo "Switching to $DEFAULT_BRANCH for release..."
   git checkout "$DEFAULT_BRANCH"
   git pull "$REMOTE" "$DEFAULT_BRANCH"
 fi
 
-# Increment version number based on release type
-IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG//[!0-9.]/}"
-case "$RELEASE_TYPE" in
-  major) ((MAJOR+=1)); MINOR=0; PATCH=0 ;;
-  minor) ((MINOR+=1)); PATCH=0 ;;
-  patch) ((PATCH+=1)) ;;
-  *) echo "Invalid release type: $RELEASE_TYPE"; exit 1 ;;
-esac
-NEW_TAG="v$MAJOR.$MINOR.$PATCH"
+# Initialize release notes with links and title
+RELEASE_NOTES="[Pull Requests]($PR_URL) | [Compare]($COMPARE_URL/$LATEST_TAG...$NEW_TAG)"
 
-# Generate release notes from conventional commits
-NOTES=$(git log "${LATEST_TAG}"..HEAD --pretty=format:"%s" \
-  | grep -E "^(feat|fix|chore|docs|style|refactor|perf|test|ci|build)!?: " \
-  | sed -E 's/^(feat|fix|chore|docs|style|refactor|perf|test|ci|build)(!?): (.+)$/- [\1] \3/g')
+RELEASE_NOTES+="
 
-# Verify changes exist for a new release
-if [ -z "$NOTES" ]; then
-  echo "No conventional commits found for a release between ${LATEST_TAG} and HEAD."
-  exit 1
+## What's Changed
+"
+
+# Define the commit categories
+CATEGORIES=("feat" "fix" "docs" "style" "refactor" "perf" "test" "chore" "ci")
+
+# Collect commits for each category using grep to match commitlint patterns
+for CATEGORY in "${CATEGORIES[@]}"; do
+  UPPER_CATEGORY=$(echo "$CATEGORY" | tr '[:lower:]' '[:upper:]')
+  
+  if [[ "$INITIAL_COMMIT_RANGE" == "HEAD" ]]; then
+    CATEGORY_COMMITS=$(git log HEAD --pretty=format:"%h %s" | grep -E "$CATEGORY(\([^)]*\))?: " || true)
+  else
+    CATEGORY_COMMITS=$(git log "$INITIAL_COMMIT_RANGE" --pretty=format:"%h %s" | grep -E "$CATEGORY(\([^)]*\))?: " || true)
+  fi
+
+  if [[ -n "$CATEGORY_COMMITS" ]]; then
+    RELEASE_NOTES+="**$UPPER_CATEGORY**
+"
+    while IFS= read -r LINE; do
+      COMMIT_HASH=${LINE%% *}
+      COMMIT_MSG=${LINE#* }
+      # Remove 'category(scope):' prefix from commit message
+      CLEAN_COMMIT_MSG=$(echo "$COMMIT_MSG" | sed -E 's/^[a-z]+\([^)]*\):\s*//; s/^[a-z]+:\s*//')
+      SHORT_HASH=${COMMIT_HASH:0:5}
+      COMMIT_LINK="[$SHORT_HASH]($REPO_URL/commit/$COMMIT_HASH)"
+      RELEASE_NOTES+="* $COMMIT_LINK - $CLEAN_COMMIT_MSG
+"
+    done <<< "$CATEGORY_COMMITS"
+    RELEASE_NOTES+="
+"  # Add extra newline after each category block
+  fi
+done
+
+# Provide a default message if no release notes are found
+if [[ -z "$RELEASE_NOTES" || "$RELEASE_NOTES" == "### What's Changed\n\n" ]]; then
+  RELEASE_NOTES="### What's Changed
+
+No release notes."
 fi
 
-# Create release tag and commit
-echo "Creating new release tag: $NEW_TAG"
-echo -e "Release Notes:\n$NOTES"
-git tag -a "$NEW_TAG" -m "Release $NEW_TAG" -m "$NOTES"
+# Append full changelog link
+RELEASE_NOTES+="
 
-# Push tag to remote
-echo "Pushing tag $NEW_TAG to $REMOTE"
+**Full Changelog**: [$LATEST_TAG...$NEW_TAG]($COMPARE_URL/$LATEST_TAG...$NEW_TAG)"
+
+# Create the tag description
+DESCRIPTION="[Release] Bump version to ${NEW_TAG}.
+
+Change was created by the GitHub Actions and automation script."
+
+# Uncomment the following lines to push the tag and create the GitHub release
+git tag -a "$NEW_TAG" -m "$DESCRIPTION"
 git push "$REMOTE" "$NEW_TAG"
-
-# Generate changelog file
-CHANGELOG_FILE="CHANGELOG.md"
-echo -e "## $NEW_TAG\n\n$NOTES\n\n$(cat $CHANGELOG_FILE)" > $CHANGELOG_FILE
-git add "$CHANGELOG_FILE"
-git commit -m "chore(release): Update changelog for $NEW_TAG"
-git push "$REMOTE" "$DEFAULT_BRANCH"
-
-# Final confirmation
-echo "Release $NEW_TAG created, changelog updated, and all changes pushed successfully."
+gh release create "$NEW_TAG" --title "$NEW_TAG" --notes "$RELEASE_NOTES"

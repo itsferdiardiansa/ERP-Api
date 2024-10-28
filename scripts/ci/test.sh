@@ -6,7 +6,7 @@ TARGET=${1:-all}     # Default to 'all' if no argument is provided
 echo "Running tests for target: $TARGET"
 
 # Set Jest command based on coverage
-JEST_COMMAND="jest --selectProjects"
+JEST_COMMAND="pnpm exec jest --selectProjects"
 
 # Select the target for testing
 case "$TARGET" in

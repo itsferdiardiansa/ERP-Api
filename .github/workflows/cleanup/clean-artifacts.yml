@@ -2,7 +2,7 @@ name: Clean Artifacts
 
 on:
   schedule:
-    - cron: "0 0 * * 0" # Runs weekly on Sundays
+    - cron: "0 0 * * 0"
 
 jobs:
   cleanup:

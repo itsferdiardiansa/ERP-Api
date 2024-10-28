@@ -13,10 +13,10 @@ mkdir -p "$COMBINED_COVERAGE" "$TEMP_COVERAGE"
 
 # Run unit and integration tests with coverage
 echo "Running unit tests with coverage..."
-jest --coverage --coverageDirectory="$APPS_COVERAGE" --selectProjects apps --passWithNoTests || { echo "Unit tests failed. Exiting."; exit 1; }
+pnpm exec jest --coverage --coverageDirectory="$APPS_COVERAGE" --selectProjects apps --passWithNoTests || { echo "Unit tests failed. Exiting."; exit 1; }
 
 echo "Running integration tests with coverage..."
-jest --coverage --coverageDirectory="$LIBS_COVERAGE" --selectProjects libs --passWithNoTests || { echo "Integration tests failed. Exiting."; exit 1; }
+pnpm exec jest --coverage --coverageDirectory="$LIBS_COVERAGE" --selectProjects libs --passWithNoTests || { echo "Integration tests failed. Exiting."; exit 1; }
 
 # Symlink coverage files into temp directory for merging
 if [[ -f "$APPS_COVERAGE/coverage-final.json" && -f "$LIBS_COVERAGE/coverage-final.json" ]]; then
